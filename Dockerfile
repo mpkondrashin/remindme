@@ -1,5 +1,5 @@
 FROM scratch
 
-COPY remaindme .
+COPY ./remaindme .
 
 ENTRYPOINT [ "./remindme" ]
