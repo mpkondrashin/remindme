@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM busybox:glibc
 WORKDIR /
 COPY remindme /
 COPY web /web
