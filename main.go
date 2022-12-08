@@ -20,10 +20,10 @@ func main() {
 	http.HandleFunc("/update", handlerUpdate)
 	http.HandleFunc("/delete", handlerDelete)
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "styles.css")
+		http.ServeFile(w, r, "web/styles.css")
 	})
 	http.HandleFunc("/fontsizes.css", handlerFontSizes)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 type DeedModel struct {
@@ -51,7 +51,7 @@ func handlerRoot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	templates, err := template.New("page").ParseFiles("page.gohtml")
+	templates, err := template.New("page").ParseFiles("web/page.gohtml")
 	if err != nil {
 		log.Printf("handler template.New: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
