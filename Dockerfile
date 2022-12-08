@@ -3,4 +3,4 @@ FROM scratch
 COPY remindme /
 COPY web /web
 
-ENTRYPOINT [ "./remindme" ]
+CMD [ "/remindme" ]
