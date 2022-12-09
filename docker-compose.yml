@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  remindme:
+    image: "mpkondrashin/remindme"
+    ports:
+      - "80:80"
+    volumes:
+      - .:/db

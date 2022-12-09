@@ -11,7 +11,7 @@ import (
 	"github.com/kennygrant/sanitize"
 )
 
-var dbFileName = "deeds.db"
+var dbFileName = "db/deeds.db"
 
 func main() {
 	http.HandleFunc("/", handlerRoot)
