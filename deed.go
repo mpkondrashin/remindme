@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"time"
 
@@ -31,27 +30,27 @@ func (d *Deed) Update() {
 
 // 1./(1.+exp(-(t-t0)/T))
 func (d *Deed) PickColor() string {
-	log.Printf("PickColor(%s)", d.Name)
+	//log.Printf("PickColor(%s)", d.Name)
 	passed := time.Since(d.Last)
-	log.Printf("%s: pased %v", d.Name, passed)
+	//log.Printf("%s: pased %v", d.Name, passed)
 	delta := passed - d.Period
-	log.Println("delta", delta)
+	//log.Println("delta", delta)
 	relative := 6. * float64(delta) / float64(d.Period)
-	log.Println("relative", relative)
+	//log.Println("relative", relative)
 	f := 1. / (1. + math.Exp(-relative))
-	log.Println("f", f)
+	//log.Println("f", f)
 	var p Color
 	if f < .5 {
 		percent := int(f * 200)
-		log.Println("percent", percent)
+		//log.Println("percent", percent)
 		p = Pick(Green, Yellow, percent)
 	} else {
 		percent := int((f - .5) * 200)
-		log.Println("percent", percent)
+		//log.Println("percent", percent)
 		p = Pick(Yellow, Red, percent)
 	}
-	log.Println("pick", p.red, p.green, p.blue)
-	log.Println("pick string", p.String())
+	//log.Println("pick", p.red, p.green, p.blue)
+	//log.Println("pick string", p.String())
 	return p.String()
 }
 
