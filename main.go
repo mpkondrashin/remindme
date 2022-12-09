@@ -176,28 +176,30 @@ func handlerFontSizes(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckAuth(w http.ResponseWriter, r *http.Request) bool {
-	_, session := Session().Get(r)
-	//log.Printf("%s: %v: Session().Get(): %v", id, r.RequestURI, session)
+	id, session := Session().Get(r)
+	log.Printf("%s: %v: Session().Get(): %v", id, r.RequestURI, session)
 	if session == nil {
 		if r.URL.Query()["session"] != nil && r.URL.Query()["session"][0] == "start" {
 			http.Redirect(w, r, "/cookies.html", http.StatusSeeOther)
 			return false
 		}
 		Session().Start(w)
-		//log.Printf("%v: Session().Start(w)", r.RequestURI)
+		log.Printf("%v: Session().Start(w)", r.RequestURI)
 		http.Redirect(w, r, r.RequestURI+"?session=start", http.StatusSeeOther)
 		return false
 	}
 	if session.Data["auth"] == "auth" {
 		return true
 	}
-	//log.Printf("%s: %s: no auth", id, r.RequestURI)
+	log.Printf("%s: %s: no auth", id, r.RequestURI)
 	password := r.URL.Query().Get("pwd")
-	//log.Printf("%s: %s: password = %s", id, r.RequestURI, password)
+	log.Printf("%s: %s: password = %s", id, r.RequestURI, password)
 	if password == "Qr0$21" {
+		log.Printf("%s: %s: password matched", id, r.RequestURI)
 		session.Data["auth"] = "auth"
 		return true
 	}
+	log.Printf("%s: %s: Unauthorised", id, r.RequestURI)
 	Warning(w, r, "Unauthorised")
 	return false
 }
