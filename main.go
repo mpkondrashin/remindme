@@ -66,6 +66,9 @@ func handlerRoot(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerAdd(w http.ResponseWriter, r *http.Request) {
+	if !CheckPassword(w, r) {
+		return
+	}
 	err := r.ParseForm()
 	if err != nil {
 		Warning(w, r, "%v", err)
@@ -99,6 +102,9 @@ func handlerAdd(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerUpdate(w http.ResponseWriter, r *http.Request) {
+	if !CheckPassword(w, r) {
+		return
+	}
 	id := r.URL.Query().Get("id")
 	if !govalidator.IsUUID(id) {
 		Warning(w, r, "Wrong UUID format")
@@ -120,6 +126,9 @@ func handlerUpdate(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerDelete(w http.ResponseWriter, r *http.Request) {
+	if !CheckPassword(w, r) {
+		return
+	}
 	id := r.URL.Query().Get("id")
 	if !govalidator.IsUUID(id) {
 		Warning(w, r, "Wrong UUID format")
@@ -155,4 +164,13 @@ func handlerFontSizes(w http.ResponseWriter, r *http.Request) {
 
 `, s, f)
 	}
+}
+
+func CheckPassword(w http.ResponseWriter, r *http.Request) bool {
+	password := r.URL.Query().Get("pwd")
+	if password == "Qr0$#21" {
+		return true
+	}
+	w.WriteHeader(http.StatusUnauthorized)
+	return false
 }
