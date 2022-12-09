@@ -2,7 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"log"
+	"os"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -14,6 +17,10 @@ type DB struct {
 }
 
 func NewDB(dbPath string) (*DB, error) {
+	_, err := os.Stat(dbPath)
+	if errors.Is(err, os.ErrNotExist) {
+		log.Printf("Does not exist: %s. Create new", dbPath)
+	}
 	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", dbPath, err)
