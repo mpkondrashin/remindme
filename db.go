@@ -11,6 +11,8 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+var ErrNotFound = errors.New("not found")
+
 type DB struct {
 	DBPath string
 	db     *sql.DB
@@ -80,6 +82,28 @@ func (db *DB) Iterate(callback func(*Deed)) error {
 		callback(&deed)
 	}
 	return nil
+}
+
+func (db *DB) Get(id string) (*Deed, error) {
+	stmt := "SELECT id, name, period, last FROM deeds WHERE id=$1"
+	rows, err := db.db.Query(stmt, id)
+	if err != nil {
+		return nil, db.Error(err)
+	}
+	defer rows.Close()
+	if rows.Err() != nil {
+		return nil, db.Error(rows.Err())
+	}
+	if !rows.Next() {
+		return nil, db.Error(fmt.Errorf("%s: %w", id, ErrNotFound))
+	}
+	var deed Deed
+	err = rows.Scan(&deed.ID, &deed.Name, &deed.Period, &deed.Last)
+	if err != nil {
+		return nil, db.Error(err)
+	}
+
+	return &deed, nil
 }
 
 func (db *DB) Error(err error) error {

@@ -1,35 +1,10 @@
-{{ define "page" -}}
-<!doctype html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Remind Me</title>
-  <meta http-equiv="refresh" content="60">
-  
-  <link rel="stylesheet" href="/fontsizes.css">
-  <link rel="stylesheet" href="/styles.css">
-  {{block "css" .}}
-  {{end}}
-</head>
-
-<body>
+{{ define "body" -}}
 <table>
     {{- range . -}}
     <tr style="background-color: {{.Color}};">
-        <td>
-        <a href="/update?id={{.ID}}">&#x2705;</a>
-        </td>
-        <td>
-        <div class="tooltip">{{.Name}}
-          <span class="tooltiptext">{{.Overdue}}</span>
-        </div>       
-        </td>
-        <td>
-        <a href="/delete?id={{.ID}}">&#x274E;</a>
-        </td>
+        <td><a href="/update?id={{.ID}}">&#x2705;</a></td>
+        <td><a href="/deed?id={{.ID}}">{{.Name}}</a></td>
+        <td><a href="/delete?id={{.ID}}">&#x274E;</a></td>
     </tr>
     {{- end -}}
 </table>
@@ -57,7 +32,5 @@
   <input type="submit" value="Add" class="btn success">
   
 </form>
-</body>
-</html>
 
 {{- end }}

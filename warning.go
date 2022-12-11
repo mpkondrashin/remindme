@@ -24,7 +24,7 @@ func handlerWarning(w http.ResponseWriter, r *http.Request) {
 	text = sanitize.HTML(text)
 	model := WarningModel{Text: text}
 
-	templates, err := template.New("page").ParseFiles("web/warning.gohtml")
+	templates, err := template.New("page").ParseFiles("web/main_layout.gohtml", "web/warning_view.gohtml")
 	if err != nil {
 		log.Printf("handlerWarning template.New: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

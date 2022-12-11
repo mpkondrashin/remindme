@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"time"
 
@@ -54,16 +53,27 @@ func (d *Deed) PickColor() string {
 	return p.String()
 }
 
+type DeedModel struct {
+	ID      string
+	Name    string
+	Period  time.Duration
+	Color   string
+	Overdue time.Duration
+}
+
+type DeedsModel []*DeedModel
+
 func (d *Deed) GetModel() *DeedModel {
 	return &DeedModel{
 		ID:      d.ID,
 		Name:    d.Name,
+		Period:  d.Period,
 		Color:   d.PickColor(),
 		Overdue: d.Overdue(),
 	}
 }
 
-func (d *Deed) Overdue() string {
+func (d *Deed) Overdue() time.Duration {
 	passed := time.Since(d.Last)
 	delta := passed - d.Period
 	switch {
@@ -76,9 +86,10 @@ func (d *Deed) Overdue() string {
 	default:
 		delta = delta.Round(time.Second)
 	}
-	if delta > 0 {
+	return delta
+	/*if delta > 0 {
 		return fmt.Sprintf("overdue: %v", delta)
 	} else {
 		return fmt.Sprintf("time left: %v", -delta)
-	}
+	}*/
 }

@@ -6,16 +6,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Warning</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Remind Me</title>
+  <meta http-equiv="refresh" content="60">
+  
   <link rel="stylesheet" href="/fontsizes.css">
+  <link rel="stylesheet" href="/styles.css">
   {{block "css" .}}
   {{end}}
 </head>
 
 <body>
-  {{ .Text }}<br/>
-  <a href="/">Home</a>
+{{block "body" .}}
+{{end}}
 </body>
 </html>
 

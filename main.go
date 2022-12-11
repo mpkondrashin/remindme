@@ -18,6 +18,7 @@ func main() {
 	http.HandleFunc("/add", handlerAdd)
 	http.HandleFunc("/warning", handlerWarning)
 	http.HandleFunc("/update", handlerUpdate)
+	http.HandleFunc("/deed", handlerDeed)
 	http.HandleFunc("/delete", handlerDelete)
 	http.HandleFunc("/styles.css", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "web/styles.css")
@@ -31,15 +32,6 @@ func main() {
 	http.HandleFunc("/fontsizes.css", handlerFontSizes)
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
-
-type DeedModel struct {
-	ID      string
-	Name    string
-	Color   string
-	Overdue string
-}
-
-type DeedsModel []*DeedModel
 
 func handlerRoot(w http.ResponseWriter, r *http.Request) {
 	if !CheckAuth(w, r) {
@@ -60,7 +52,7 @@ func handlerRoot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	templates, err := template.New("page").ParseFiles("web/page.gohtml")
+	templates, err := template.New("page").ParseFiles("web/main_layout.gohtml", "web/page_view.gohtml")
 	if err != nil {
 		log.Printf("handler template.New: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -131,6 +123,39 @@ func handlerUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+}
+
+func handlerDeed(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	if !govalidator.IsUUID(id) {
+		Warning(w, r, "Wrong UUID format")
+		return
+	}
+	db, err := NewDB(dbFileName)
+	if err != nil {
+		Warning(w, r, "Create DB: %v", err)
+		return
+	}
+	defer db.Close()
+	deed, err := db.Get(id)
+	if err != nil {
+		Warning(w, r, "Get: %v", err)
+		return
+	}
+	deedModel := deed.GetModel()
+	templates, err := template.New("page").Funcs(GlobalFuncMap).ParseFiles("web/main_layout.gohtml", "web/deed_view.gohtml")
+	if err != nil {
+		log.Printf("handlerWarning template.New: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = templates.ExecuteTemplate(w, "page", deedModel)
+	if err != nil {
+		log.Printf("handlerWarning templates.ExecuteTemplate: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 }
 
