@@ -4,16 +4,16 @@
         <td colspan="2">{{.Name}}</td>
     </tr>
     <tr>
-        <td>{{ if lt .Overdue 0 }}&#x1F600;{{else}}&#x1F641;{{end}}</td>
+        <td>&#x1F551;</td>
+        <td>Period: {{duration .Period}}</td>
+    </tr>
+    <tr>
+        <td>{{ if lt .Overdue 0 }}&#x1F600; Time left:{{else}}&#x1F641; Overdue: {{end}}</td>
         <td>{{duration .Overdue}}</td>
     </tr>
     <tr>
         <td><a href="/update?id={{.ID}}">&#x2713;</a></td>
         <td><a href="/update?id={{.ID}}">Did it</a></td>
-    </tr>
-    <tr>
-        <td>&#x1F551;</td>
-        <td>Period: {{duration .Period}}</td>
     </tr>
     <tr>
         <td><a href="/edit?id={{.ID}}">&#x270e;</a></td>
