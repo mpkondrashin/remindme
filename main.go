@@ -187,7 +187,7 @@ func handlerEdit(w http.ResponseWriter, r *http.Request) {
 func handlerDeed(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	if !govalidator.IsUUID(id) {
-		Warning(w, r, "Wrong UUID format")
+		Warning(w, r, "Wrong UUID format: %s", id)
 		return
 	}
 	db, err := NewDB(dbFileName)
@@ -268,7 +268,11 @@ func CheckAuth(w http.ResponseWriter, r *http.Request) bool {
 		}
 		Session().Start(w)
 		log.Printf("%v: Session().Start(w)", r.RequestURI)
-		http.Redirect(w, r, r.RequestURI+"?session=start", http.StatusSeeOther)
+		q := r.URL.Query()
+		q.Add("session", "start")
+		r.URL.RawQuery = q.Encode()
+		log.Printf("Redirect to %v", r.URL.String())
+		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
 		return false
 	}
 	if session.Data["auth"] == "auth" {

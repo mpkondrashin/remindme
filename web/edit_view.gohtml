@@ -1,5 +1,5 @@
 {{define "body" -}}
-<form action="/add?id={{.ID}}" method="POST">
+<form action="/add?id={{.ID}}" method="PUT">
 <table>
     <tr>
         <td><label for="name">Name:</label></td>
@@ -20,8 +20,13 @@
     </tr>
     <tr>
         <td><input type="submit" value="Save" class="btn success"></td>
-        <td><input type="submit" value="Cancel" class="btn success"></td>
+        <td>
+            <input type="submit" value="Cancel" class="btn success">
+        </td>
     </tr>
 </table>    
+</form>
+<form action="/delete?id={{.ID}}" method="POST">
+            <input type="submit" value="Delete" class="btn success">
 </form>
 {{end}}
