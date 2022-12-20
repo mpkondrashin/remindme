@@ -34,7 +34,7 @@ func (d *Deed) PickColor() string {
 	//log.Printf("%s: pased %v", d.Name, passed)
 	delta := passed - d.Period
 	//log.Println("delta", delta)
-	relative := 6. * float64(delta) / float64(d.Period)
+	relative := 3. * float64(delta) / float64(d.Period)
 	//log.Println("relative", relative)
 	f := 1. / (1. + math.Exp(-relative))
 	//log.Println("f", f)
