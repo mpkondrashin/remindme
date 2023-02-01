@@ -83,6 +83,7 @@ func handlerAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	nameStr := r.PostForm.Get("name")
+	log.Println("nameStr", nameStr)
 	nameStr = sanitize.HTML(nameStr)
 	if nameStr == "" {
 		Warning(w, r, "Missing name")
