@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -32,7 +33,23 @@ func main() {
 		http.ServeFile(w, r, "/dev/null")
 	})
 	http.HandleFunc("/fontsizes.css", handlerFontSizes)
-	log.Fatal(http.ListenAndServe(":80", nil))
+
+	cert, err := tls.LoadX509KeyPair("web/cert/cert.pem", "web/cert/key.pem")
+	if err != nil {
+		log.Fatalf("Failed to load self-signed certificate: %v", err)
+	}
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+
+	srv := &http.Server{
+		Addr:      ":443",
+		TLSConfig: tlsConfig,
+	}
+	log.Println("Starting HTTPS server...")
+	log.Fatal(srv.ListenAndServeTLS("", ""))
+
+	//log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 func handlerRoot(w http.ResponseWriter, r *http.Request) {

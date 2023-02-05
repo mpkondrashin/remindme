@@ -92,10 +92,10 @@ func (s *Sessions) Start(w http.ResponseWriter) {
 	s.sessions[uuid] = newSessionData
 	lock.Unlock()
 	cookie := http.Cookie{
-		Name:  SessionCookieName,
-		Value: uuid,
-		Path:  "/",
-		//	Secure:   true,
+		Name:     SessionCookieName,
+		Value:    uuid,
+		Path:     "/",
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteStrictMode,
 		MaxAge:   60 * 60 * 24,
