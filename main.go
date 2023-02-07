@@ -40,6 +40,7 @@ func main() {
 	}
 	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
+		MinVersion:   tls.VersionTLS12,
 	}
 
 	srv := &http.Server{
@@ -48,8 +49,6 @@ func main() {
 	}
 	log.Println("Starting HTTPS server...")
 	log.Fatal(srv.ListenAndServeTLS("", ""))
-
-	//log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 func handlerRoot(w http.ResponseWriter, r *http.Request) {
@@ -188,7 +187,8 @@ func handlerEdit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	deedModel := deed.GetModel()
-	templates, err := template.New("page").Funcs(GlobalFuncMap).ParseFiles("web/main_layout.gohtml", "web/edit_view.gohtml")
+	templates := template.New("page").Funcs(GlobalFuncMap)
+	templates, err = templates.ParseFiles("web/main_layout.gohtml", "web/edit_view.gohtml")
 	if err != nil {
 		log.Printf("handlerWarning template.New: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -220,7 +220,8 @@ func handlerDeed(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	deedModel := deed.GetModel()
-	templates, err := template.New("page").Funcs(GlobalFuncMap).ParseFiles("web/main_layout.gohtml", "web/deed_view.gohtml")
+	templates := template.New("page").Funcs(GlobalFuncMap)
+	templates, err = templates.ParseFiles("web/main_layout.gohtml", "web/deed_view.gohtml")
 	if err != nil {
 		log.Printf("handlerWarning template.New: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -261,11 +262,8 @@ func handlerFontSizes(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/css")
 	f1 := 14
 	f2 := 64
-	//s1 := 140
-	//s2 := 640
 	for f := f1; f <= f2; f++ {
 		s := f * 10
-		//s := s1 + (s2-s1)*(f-f1)/(f2-f1)
 		fmt.Fprintf(w, `@media screen and (min-width: %dpx) { 
 	* {
 		font-size: %dpx;

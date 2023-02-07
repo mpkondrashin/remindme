@@ -26,34 +26,29 @@ func Duration(d time.Duration) string {
 	day := 24 * hour
 	week := 7 * day
 
-	weeks := d / week
-	if weeks > 0 {
+	if weeks := d / week; weeks > 0 {
 		fmt.Fprintf(&sb, " %d weeks", weeks)
 		d /= week
 	}
 
-	days := d / day
-	if days > 0 {
+	if days := d / day; days > 0 {
 		fmt.Fprintf(&sb, " %d days", days)
 		d /= day
 	}
 
-	hours := d / hour
-	if hours > 0 {
+	if hours := d / hour; hours > 0 {
 		fmt.Fprintf(&sb, " %dh", hours)
 		d /= hour
 	}
 
-	minutes := d / minute
-	if minutes > 0 {
+	if minutes := d / minute; minutes > 0 {
 		fmt.Fprintf(&sb, " %dm", minutes)
 		d /= minute
 	}
 
-	seconds := d / second
-	if seconds > 0 {
+	if seconds := d / second; seconds > 0 {
 		fmt.Fprintf(&sb, " %ds", seconds)
-		d /= second
+		//		d /= second
 	}
 
 	return sign + sb.String()[1:]

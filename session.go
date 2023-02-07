@@ -59,27 +59,23 @@ func (s *Sessions) Get(r *http.Request) (string, *SessionData) {
 		}
 	}
 	if cookie == nil {
-		//log.Printf("%v: No cookie", r.RequestURI)
 		return "", nil
 	}
-	sessionId := cookie.Value
-	session := s.sessions[sessionId]
+	sessionID := cookie.Value
+	session := s.sessions[sessionID]
 	if session == nil {
-		log.Printf("Session not found: %s", sessionId)
+		log.Printf("Session not found: %s", sessionID)
 		return "", nil
 	}
 	threshold := time.Now().Add(-SessionMaxDiration)
-	//Logf(r, "Session.Get(%s): threshold: %v", sessionId, threshold)
-	//Logf(r, "Session.Get(%s): LastOperation: %v", sessionId, session.LastOperation)
 	if session.LastOperation.Before(threshold) {
-		//log.Printf("Session.Get: %s Expired!", sessionId)
 		lock.Lock()
-		delete(s.sessions, sessionId)
+		delete(s.sessions, sessionID)
 		lock.Unlock()
 		return "", nil
 	}
 	session.LastOperation = time.Now()
-	return sessionId, session
+	return sessionID, session
 }
 
 func (s *Sessions) Start(w http.ResponseWriter) {
